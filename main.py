@@ -1,14 +1,23 @@
 #Program Manajemen Kontak
 
+def membuka_kontak(path='kontak.txt'):
+    with open(path, mode='r') as file:
+        kontak = file.readlines()
+    return kontak
+
+def menyimpan_kontak(path='kontak.txt', isi=[]):
+    with open(path, mode='w') as file:
+        file.writelines(isi)
+
 class Kontak:
     def __init__(self):
-        self.kontak = []
+        self.kontak = membuka_kontak()
 
     def melihat_kontak(self):
         # melihat semua kontak
         if self.kontak:
             for num, item in enumerate(self.kontak, start=1):
-                print(f'{num}. {item["nama"]} ({item["HP"]}, {item["email"]})')
+                print(f'{num}. ' + item)
         else:
             print("\nKontak Kosong!")
             return 1
@@ -18,7 +27,7 @@ class Kontak:
         nama = input("Masukkan nama kontak yang baru: ")
         HP = input("Masukkan nomor HP yang baru: ")
         email = input("Masukkan alamat email yang baru: ")
-        kontak_baru = {'nama': nama, 'HP': HP, 'email': email}
+        kontak_baru = f'{nama} ({HP}, {email})' + '\n'
         self.kontak.append(kontak_baru)
         print("Kontak baru berhasil ditambahkan")
 
@@ -27,9 +36,15 @@ class Kontak:
         if self.melihat_kontak()== 1:
             return
         else:
-            i_hapus = int(input("Masukkan nomor kontak yang akan dihapus: "))
-            del self.kontak[i_hapus - 1]
-            print("Kontak berhasil dihapus")
+            try:
+                i_hapus = int(input("Masukkan nomor kontak yang akan dihapus: "))
+                del self.kontak[i_hapus - 1]
+                print("Kontak berhasil dihapus")
+            except:
+                print("Input yang anda masukakan salah")
+
+    def keluar_kontak(self):
+        menyimpan_kontak(isi=self.kontak)
 
 kontak_kantor = Kontak()
 kontak_keluarga = Kontak()
@@ -55,6 +70,7 @@ while True:
 
     elif pilihan == '4':
         #keluar dari kontak
+        kontak_kantor.keluar_kontak()
         break
     else:
         print("Anda salah memasukkan angka")
